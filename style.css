@@ -1,0 +1,1785 @@
+/* =====================================================================
+   HOW TO READ THIS FILE
+   The sections follow the same order as the page, top to bottom:
+   1 Tokens | 2 Base | 3 Header | 4 Hero | 5 About | 6 Skills | 7 Projects
+   8 Education | 9 Connect | 10 Contact form | 11 Footer | 12 Accessibility
+   Every section ends with its own @media block (the mobile layout).
+   One property per line. Tricky parts have a note above them.
+   ===================================================================== */
+
+/* ============ 1. TOKENS ============ */
+
+/* All colours, fonts and settings live here as CSS variables.
+   Change a value once (e.g. --mocha) and every var(--mocha) updates. */
+:root {
+  --cream: #F6F1E8;
+  --sand: #E5D8C6;
+  --mocha: #8B6B50;
+  --choc: #49372D;
+  --olive: #777B59;
+  --taupe: #A89580;
+  --bg: var(--cream);
+  --alt: #EFE6D8;
+  --ink: var(--choc);
+  --soft: #66544a;
+  --line: rgba(73, 55, 45, .22);
+  --label: #5C6043;
+  --btn: var(--choc);
+  --btn-ink: var(--cream);
+  --serif: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --sans: 'DM Sans', 'Helvetica Neue', Arial, sans-serif;
+  --hand: 'Mrs Saint Delafield', 'Segoe Script', 'Brush Script MT', cursive;
+  --display: 'Playfair Display', 'Didot', Georgia, serif;
+  box-sizing: border-box;
+}
+
+/* DARK MODE: if the visitor's device uses dark mode, we only redefine
+   the variables above, so the whole page re-colours itself automatically. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #2b221d;
+    --alt: #33291f;
+    --ink: #F2EBDD;
+    --soft: #cdbfae;
+    --line: rgba(242, 235, 221, .2);
+    --label: #BFC39A;
+    --btn: #E5D8C6;
+    --btn-ink: #2D241F;
+    --mocha: #c4a283;
+  }
+  .chip i {
+    color: #2D241F;
+  }
+  :root:not([data-theme="light"]) input:checked + .chip {
+    color: #2D241F;
+  }
+  :root:not([data-theme="light"]) .cat {
+    --c: var(--mocha);
+  }
+  .cat .eyebrow {
+    color: #c4a283;
+  }
+}
+
+/* ============ 2. BASE ============ */
+
+/* scroll-behavior: smooth = animated scrolling for the menu links.
+   scroll-padding-top = leaves room for the sticky header, so a title
+   is not hidden under it after clicking a menu link. */
+html {
+  scroll-behavior: auto !important;
+  scroll-padding-top: 90px;
+}
+
+/* border-box: padding and border are counted INSIDE the element's width. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  overflow-x: hidden;
+}
+
+/* On phones with a notch, this strip paints the top safe-area with the page colour. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  background: var(--bg);
+  z-index: 60;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--olive);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--serif);
+  font-weight: 450;
+  margin: 0;
+  line-height: 1.12;
+  letter-spacing: -.01em;
+}
+
+p {
+  margin: 0 0 1em;
+}
+
+/* Highlighted text (when the visitor selects text to copy): gold instead of the browser's default blue.
+   The gradient-text titles need their own line, because their normal text fill is transparent. */
+::selection {
+  background: #e3c35a;
+  color: #2D241F;
+}
+
+.gold::selection,
+.hero h1 span::selection {
+  -webkit-text-fill-color: #2D241F;
+  color: #2D241F;
+}
+
+/* Centred container. max-width limits the line length.
+   clamp(min, preferred, max) makes the side padding grow with the screen. */
+.wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 5vw, 48px);
+}
+
+section {
+  padding: clamp(54px, 7vw, 92px) 0;
+  position: relative;
+}
+
+.alt {
+  background: var(--alt);
+}
+
+.eyebrow {
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--label);
+}
+
+/* The fingerprint icon. Its stroke uses the gold gradient (#goldg)
+   defined in the <svg> at the top of the HTML. */
+.fp {
+  width: 1em;
+  height: 1.2em;
+  fill: none;
+  stroke: url(#goldg);
+  stroke-width: 6;
+  stroke-linecap: round;
+  color: var(--olive);
+}
+
+.fp.gold-fp {
+  stroke: url(#goldg);
+}
+
+.sub {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+  color: var(--mocha);
+  display: flex;
+  align-items: center;
+  gap: .5em;
+  margin-top: .6rem;
+}
+
+.sub .fp {
+  font-size: 1.3em;
+}
+
+.head {
+  max-width: 620px;
+  margin-bottom: clamp(26px, 4vw, 44px);
+}
+
+.head h2 {
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+}
+
+.sprite {
+  position: absolute;
+}
+
+.hint {
+  margin-top: 1rem;
+  color: var(--soft);
+}
+
+.eng .sub.small {
+  font-size: 1.05rem;
+}
+
+/* "Visually hidden": hides the radio buttons but keeps them usable
+   from the keyboard. The Skills section needs them (see section 6). */
+.vh {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* "The Laya Code": shiny gold highlight */
+
+/* GRADIENT TEXT TRICK:
+   1) background = a gold gradient
+   2) background-clip: text cuts the gradient to the shape of the letters
+   3) text-fill-color: transparent lets the gradient show through
+   4) the animation slides the gradient left and right. */
+.gold,
+.hero h1 span {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 600;
+  color: #9a7418;
+  background: linear-gradient(100deg, #6f500c 0%, #a8801a 35%, #d4b24a 50%, #96721a 65%, #6f500c 100%);
+  background-size: 240% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 7s ease-in-out infinite;
+}
+
+/* DRAW-ON ANIMATION for the hero fingerprint. Each ring starts "undrawn"
+   (dashoffset 1) and animates to 0. It works because the HTML gives every
+   ellipse pathLength="1". --k (set in the HTML) delays each ring in turn. */
+.m {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: draw 1.2s ease-out forwards;
+  animation-delay: calc(var(--k)*.28s + .3s);
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes shine {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Heading hover: width: fit-content makes the line only as wide as the text.
+   The gold line is the ::after element, scaled from 0 to 1 on hover. */
+h2 {
+  width: fit-content;
+  position: relative;
+  transition: transform .4s cubic-bezier(.2, .7, .2, 1), color .3s;
+}
+
+h2::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -.14em;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #8a6414, #e3c35a, #8a6414);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .5s cubic-bezier(.2, .7, .2, 1);
+}
+
+h2:hover {
+  transform: translateX(8px);
+  color: var(--mocha);
+}
+
+h2:hover::after {
+  transform: scaleX(1);
+}
+
+/* editorial link */
+
+/* Editorial link: the underline is the ::after element,
+   shrunk with scaleX(.3) and stretched to 1 on hover. */
+.elink {
+  display: inline-flex;
+  align-items: baseline;
+  gap: .5em;
+  text-decoration: none;
+  font-weight: 500;
+  position: relative;
+  padding-bottom: 5px;
+  transition: color .25s;
+}
+
+.elink::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1.5px;
+  background: var(--olive);
+  transform: scaleX(.3);
+  transform-origin: left;
+  transition: transform .35s;
+}
+
+.elink .ar {
+  display: inline-block;
+  transition: transform .3s;
+}
+
+.elink:hover,
+.elink:focus-visible {
+  color: var(--label);
+}
+
+.elink:hover::after,
+.elink:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.elink:hover .ar,
+.elink:focus-visible .ar {
+  transform: translate(3px, -3px);
+}
+
+/* ============ 3. HEADER / MENU ============ */
+
+/* Sticky header: it stays at the top while scrolling.
+   z-index keeps it above the page content. */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--bg);
+  padding-top: env(safe-area-inset-top, 0px);
+  border-bottom: 1px solid var(--line);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 72px;
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.logo .la {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  flex: none;
+  border-radius: 50%;
+  border: 1.5px solid var(--olive);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.2rem;
+  position: relative;
+  transition: border-color .3s;
+}
+
+.logo .la .t {
+  transition: opacity .25s;
+}
+
+.logo .la .fp {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  font-size: 1.3rem;
+  stroke-width: 9;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(.6);
+  transition: opacity .3s, transform .4s;
+}
+
+.logo:hover .la,
+.logo:focus-visible .la {
+  border-color: #b8891b;
+}
+
+.logo:hover .la .t,
+.logo:focus-visible .la .t {
+  opacity: 0;
+}
+
+.logo:hover .la .fp,
+.logo:focus-visible .la .fp {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Hidden (max-width: 0) until the logo is hovered,
+   then it grows to show the photo and the name. */
+.logo .reveal {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: max-width .5s cubic-bezier(.2, .7, .2, 1), opacity .35s, margin .5s;
+}
+
+.logo .reveal img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex: none;
+}
+
+.logo .reveal b {
+  font-family: var(--serif);
+  font-weight: 450;
+  font-style: italic;
+  font-size: 1.15rem;
+}
+
+.logo:hover .reveal,
+.logo:focus-visible .reveal {
+  max-width: 240px;
+  opacity: 1;
+  margin-left: 12px;
+}
+
+nav {
+  display: flex;
+  gap: clamp(16px, 3vw, 38px);
+}
+
+nav a {
+  position: relative;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: .98rem;
+  padding: 8px 0;
+}
+
+/* The underline that draws from left to right on hover. */
+nav a::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 3px;
+  width: 100%;
+  height: 1.5px;
+  background: var(--olive);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform .35s;
+}
+
+/* The italic caption under each menu item.
+   content: attr(data-title) reads the text from the data-title attribute in the HTML. */
+nav a::after {
+  content: attr(data-title);
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  transform: translate(-50%, -4px);
+  white-space: nowrap;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: .95rem;
+  color: var(--mocha);
+  background: var(--bg);
+  padding: 2px 12px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s, transform .3s;
+}
+
+nav a:hover::before,
+nav a:focus-visible::before {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+nav a:hover::after,
+nav a:focus-visible::after {
+  opacity: 1;
+  transform: translate(-50%, 6px);
+}
+
+@media (max-width: 720px) {
+  .bar {
+    flex-wrap: wrap;
+    padding: 10px 0;
+    gap: 6px;
+  }
+  nav {
+    width: 100%;
+    overflow-x: auto;
+    gap: 20px;
+    padding-bottom: 4px;
+  }
+  nav a::after {
+    display: none;
+  }
+}
+
+/* ============ 4. HERO ============ */
+
+.hero {
+  padding-top: clamp(40px, 7vw, 90px);
+}
+
+/* Two columns: text on the left, photo on the right.
+   On mobile it becomes one column (see the @media below). */
+.hero .wrap {
+  display: grid;
+  grid-template-columns: 1.05fr .95fr;
+  gap: clamp(30px, 6vw, 80px);
+  align-items: center;
+}
+
+.hero h1 {
+  font-family: var(--display);
+  line-height: 1;
+  margin: 0 0 1.4rem;
+}
+
+.hero h1 span {
+  display: block;
+  font-family: var(--display);
+}
+
+.hero h1 .first {
+  font-style: italic;
+  font-weight: 600;
+  font-size: clamp(4rem, 11.5vw, 8.4rem);
+  letter-spacing: -.02em;
+  padding-bottom: .08em;
+}
+
+.hero h1 .last {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-style: normal;
+  font-weight: 500;
+  font-size: clamp(1.25rem, 3.4vw, 2.3rem);
+  letter-spacing: .4em;
+  text-transform: uppercase;
+  margin-top: .4rem;
+  padding-left: .2em;
+}
+
+/* The small gold line after the surname. */
+.hero h1 .last::after {
+  content: "";
+  flex: 1;
+  max-width: 110px;
+  height: 1.5px;
+  background: linear-gradient(90deg, #a8801a, transparent);
+}
+
+.code {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 1.6rem;
+  padding-top: 1.3rem;
+  border-top: 1px solid var(--line);
+  max-width: 430px;
+}
+
+.code .fp {
+  font-size: 3.8rem;
+  flex: none;
+  stroke-width: 4.5;
+}
+
+.code p {
+  margin: 0;
+  line-height: 1.2;
+}
+
+.code .gold {
+  display: block;
+  font-size: clamp(1.7rem, 3.4vw, 2.4rem);
+}
+
+.beyond {
+  display: block;
+  margin-top: .4rem;
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--label);
+}
+
+.role {
+  font-weight: 600;
+  font-size: .78rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--label);
+  margin-bottom: .6rem;
+}
+
+.portrait {
+  position: relative;
+  width: min(100%, 440px);
+  justify-self: center;
+  aspect-ratio: 1;
+}
+
+.portrait img {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 30%;
+  border-radius: 50%;
+  display: block;
+  border: 6px solid var(--bg);
+  transition: box-shadow .5s;
+}
+
+/* The golden half-ring around the photo: a full circle border,
+   cut in half with clip-path and rotated on hover. */
+.portrait::after {
+  content: "";
+  position: absolute;
+  inset: -9px;
+  border-radius: 50%;
+  border: 1.5px solid #b8891b;
+  z-index: 3;
+  clip-path: polygon(0 0, 60% 0, 60% 100%, 0 100%);
+  transform: rotate(-30deg);
+  transition: transform .9s cubic-bezier(.2, .7, .2, 1);
+}
+
+.portrait:hover::after {
+  transform: rotate(150deg);
+}
+
+.portrait:hover img {
+  box-shadow: 0 0 0 1.5px #c9a227, 0 0 0 9px var(--bg), 0 0 0 10.5px #a8801a;
+}
+
+@media (max-width: 760px) {
+  .hero .wrap {
+    grid-template-columns: 1fr;
+  }
+  .portrait {
+    order: -1;
+    width: 250px;
+    justify-self: start;
+    margin-left: 10px;
+  }
+}
+
+/* ============ 5. ABOUT ============ */
+
+/* 12-column grid. The title spans every column (1 / -1),
+   the lead text takes columns 1-5 and the paragraphs take 7-12. */
+.about {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: clamp(22px, 3vw, 36px) 24px;
+}
+
+.about .title {
+  grid-column: 1/-1;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px 28px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 16px;
+}
+
+.about h2 {
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+}
+
+.about .title .sub {
+  margin: 0;
+}
+
+.about .lead {
+  grid-column: 1/6;
+  font-family: var(--serif);
+  font-size: clamp(1.4rem, 2.6vw, 1.95rem);
+  line-height: 1.35;
+  margin: 0;
+}
+
+.about .text {
+  grid-column: 7/13;
+}
+
+.about .text p {
+  margin: 0 0 1em;
+}
+
+@media (max-width: 760px) {
+  .about .lead,
+  .about .text {
+    grid-column: 1/-1;
+  }
+}
+
+/* ============ 6. TECHNICAL PALETTE ============ */
+
+/* Skills: a grid of category blocks (2 columns on desktop, 1 on mobile). */
+.palette {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(28px, 4vw, 48px) clamp(30px, 5vw, 70px);
+}
+
+.cat {
+  --c: var(--mocha);
+  border-top: 1.5px solid var(--c);
+  padding-top: 16px;
+  position: relative;
+}
+
+.cat h3 {
+  font-size: 1.5rem;
+  margin: .3rem 0 1rem;
+}
+
+.cat .eyebrow {
+  color: #7a5a40;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* A skill "pill". It is a <label> tied to a hidden radio button,
+   so clicking the label ticks the radio. */
+.chip {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 16px 6px 6px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: .96rem;
+  transition: background .25s, border-color .25s, color .25s, transform .3s cubic-bezier(.2, .7, .2, 1), box-shadow .3s;
+}
+
+.chip i {
+  display: grid;
+  place-items: center;
+  font-family: var(--sans);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--c);
+  color: #FFFEFA;
+  font-style: normal;
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .02em;
+  transition: transform .35s cubic-bezier(.2, .7, .2, 1);
+}
+
+/* Keep the IntelliJ IDEA letters stacked and centered inside the circle. */
+.chip i.intellij-icon {
+  line-height: 1;
+}
+
+.intellij-mark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  font-size: .58rem;
+  line-height: .68;
+  letter-spacing: 0;
+}
+
+.intellij-mark span:first-child {
+  font-size: .62rem;
+}
+
+/* RADIO-BUTTON TRICK (no JavaScript):
+   "input:checked + .chip" = the label that comes right after the ticked radio. */
+input:checked + .chip {
+  background: var(--c);
+  color: #FFFEFA;
+  border-color: var(--c);
+}
+
+input:checked + .chip i {
+  background: #FFFEFA;
+  color: var(--choc);
+}
+
+input:focus-visible + .chip {
+  outline: 2px solid var(--olive);
+  outline-offset: 3px;
+}
+
+/* Hover (or tap on a touch screen): the pill lifts up, turns gold with a soft glow,
+   and its round icon turns dark and tilts. */
+.chip:hover,
+.chip:active,
+input:checked + .chip:hover,
+input:checked + .chip:active {
+  background: linear-gradient(100deg, #b8891b, #e3c35a 50%, #b8891b);
+  border-color: #a8801a;
+  color: #2D241F;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 22px -8px rgba(184, 137, 27, .75);
+}
+
+.chip:hover i,
+.chip:active i,
+input:checked + .chip:hover i,
+input:checked + .chip:active i {
+  background: #49372D;
+  color: #F6F1E8;
+  transform: rotate(-10deg) scale(1.12);
+}
+
+/* Light streak: a slanted white gradient parked off the left edge.
+   On hover it slides across to the right (the pill's overflow: hidden clips it). */
+.chip::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -60%;
+  width: 40%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .6), transparent);
+  transform: skewX(-20deg);
+  pointer-events: none;
+  transition: left .6s ease;
+}
+
+.chip:hover::after {
+  left: 130%;
+}
+
+/* Descriptions are hidden by default (display: none).
+   Only the one that matches the ticked radio is shown by the long rule below. */
+.d {
+  display: none;
+  flex: 0 0 100%;
+  margin: 1.1rem 0 0;
+  padding-left: 16px;
+  border-left: 1.5px solid var(--c);
+  min-height: 5.2em;
+  max-width: 44ch;
+  color: var(--soft);
+  font-size: 1rem;
+}
+
+/* Each selector reads: "if radio #a1 is ticked, show description .d1"
+   (the ~ means: a later sibling inside the same group). */
+#a1:checked ~ .d1,
+#a2:checked ~ .d2,
+#a3:checked ~ .d3,
+#b1:checked ~ .d1,
+#b2:checked ~ .d2,
+#b3:checked ~ .d3,
+#b4:checked ~ .d4,
+#c1:checked ~ .d1,
+#a4:checked ~ .d4,
+#a5:checked ~ .d5,
+#a6:checked ~ .d6,
+#d1:checked ~ .d1,
+#d2:checked ~ .d2,
+#d3:checked ~ .d3,
+#d4:checked ~ .d4,
+#e1:checked ~ .d1,
+#e2:checked ~ .d2,
+#e3:checked ~ .d3,
+#e4:checked ~ .d4 {
+  display: block;
+  animation: fade .4s;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.closing {
+  margin: clamp(36px, 5vw, 56px) auto 0;
+  text-align: center;
+  max-width: 36ch;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--soft);
+}
+
+.closing .fp {
+  display: block;
+  margin: 0 auto .6rem;
+  font-size: 1.6rem;
+}
+
+#palette .fp {
+  color: var(--mocha);
+}
+
+.certs {
+  margin-top: clamp(40px, 6vw, 64px);
+}
+
+.certs h3 {
+  font-size: 1.5rem;
+  margin: .3rem 0 1rem;
+}
+
+.cert-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cert-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
+}
+
+.cert-list li:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.cert-list strong {
+  display: block;
+  font-family: var(--serif);
+  font-weight: 450;
+  font-size: 1.2rem;
+}
+
+.cert-list div span {
+  color: var(--soft);
+  font-size: .95rem;
+}
+
+.palette-name {
+  font-family: var(--serif);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  margin: .4rem 0 0;
+  line-height: 1.2;
+}
+
+@media (max-width: 760px) {
+  .palette {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============ 7. PROJECTS ============ */
+
+.proj {
+  padding: clamp(28px, 4vw, 44px) 0;
+  border-top: 1px solid var(--line);
+}
+
+.proj h3 {
+  font-size: clamp(1.5rem, 3vw, 2.3rem);
+  margin: .3rem 0 .5rem;
+}
+
+.proj p {
+  max-width: 46ch;
+  color: var(--soft);
+}
+
+.proj .elink {
+  margin-top: .4rem;
+}
+
+/* First project: text on the left, link on the right. */
+.p1 {
+  display: grid;
+  grid-template-columns: 1.5fr auto;
+  gap: 14px 48px;
+  align-items: end;
+}
+
+.p1 h3 {
+  font-size: clamp(1.8rem, 4vw, 3.1rem);
+}
+
+/* Two projects side by side, with a thin vertical line between them. */
+.duo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 clamp(24px, 5vw, 72px);
+  border-top: 1px solid var(--line);
+}
+
+.duo .proj {
+  border-top: 0;
+}
+
+.duo .proj + .proj {
+  margin-top: clamp(0px, 4vw, 48px);
+  border-left: 1px solid var(--line);
+  padding-left: clamp(20px, 4vw, 56px);
+}
+
+@media (max-width: 820px) {
+  .p1 {
+    grid-template-columns: 1fr;
+  }
+  .duo {
+    grid-template-columns: 1fr;
+  }
+  .duo .proj + .proj {
+    margin-top: 0;
+    border-left: 0;
+    padding-left: 0;
+    border-top: 1px solid var(--line);
+  }
+  .proj {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============ 8. EDUCATION ============ */
+
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 40px;
+  margin: 0 0 clamp(40px, 6vw, 70px);
+  padding: 0;
+}
+
+.facts div {
+  min-width: 180px;
+}
+
+.facts dt {
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--label);
+}
+
+.facts dd {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.3rem;
+}
+
+/* The two GPA numbers side by side, with a divider line. */
+.gpas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.gpa {
+  padding: clamp(26px, 4vw, 48px) 0;
+  position: relative;
+  transition: background .35s ease, transform .35s ease;
+  border-radius: 8px;
+}
+
+.gpa:hover {
+  background: linear-gradient(135deg, rgba(184, 137, 27, .10), rgba(227, 195, 90, .04));
+  transform: translateY(-4px);
+}
+
+.gpa b {
+  transition: color .3s ease, letter-spacing .3s ease;
+}
+
+.gpa:hover b {
+  color: var(--mocha);
+  letter-spacing: -.015em;
+}
+
+.gpa + .gpa {
+  border-left: 1px solid var(--line);
+  padding-left: clamp(20px, 5vw, 64px);
+}
+
+.gpa b {
+  display: block;
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(3.6rem, 9vw, 7rem);
+  line-height: 1;
+  letter-spacing: -.03em;
+}
+
+.gpa b small {
+  font-size: .3em;
+  color: var(--mocha);
+  letter-spacing: 0;
+  margin-left: .2em;
+}
+
+/* English courses: title on the left, a 2-column list on the right. */
+.eng {
+  margin-top: clamp(56px, 8vw, 100px);
+  display: grid;
+  grid-template-columns: 1fr 1.7fr;
+  gap: clamp(24px, 5vw, 70px);
+  align-items: start;
+}
+
+.eng h3 {
+  font-size: clamp(1.8rem, 3.4vw, 2.5rem);
+}
+
+.courses {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 28px;
+}
+
+.courses li {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 16px 8px;
+  border-bottom: 1px solid var(--line);
+  border-radius: 5px;
+  transition: background .3s ease, padding .3s ease, border-color .3s ease;
+}
+
+.courses li:hover {
+  padding-left: 16px;
+  background: linear-gradient(90deg, rgba(184, 137, 27, .10), transparent);
+  border-bottom-color: var(--mocha);
+}
+
+.courses li strong,
+.courses li .g {
+  transition: color .3s ease, transform .3s ease;
+}
+
+.courses li:hover strong {
+  color: var(--mocha);
+}
+
+.courses li:hover .g {
+  color: var(--label);
+  transform: translateX(3px);
+}
+
+.courses strong {
+  display: block;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.courses span.g {
+  font-size: .92rem;
+  color: var(--soft);
+}
+
+@media (max-width: 760px) {
+  .gpas,
+  .eng,
+  .courses {
+    grid-template-columns: 1fr;
+  }
+  .gpa + .gpa {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+    padding-left: 0;
+  }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  .gpa,
+  .gpa b,
+  .courses li,
+  .courses li strong,
+  .courses li .g {
+    transition: none;
+  }
+}
+
+/* ============ 9. CONNECT ============ */
+
+/* Top part of the Connect section: invitation (left) and contact links (right).
+   The form below has its own .wrap, so it is not affected by this grid. */
+.connect .split {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: clamp(36px, 7vw, 100px);
+  align-items: start;
+}
+
+.connect h2 {
+  font-size: clamp(2.4rem, 6vw, 4.6rem);
+  font-weight: 400;
+  line-height: 1.02;
+}
+
+.invite {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 1rem 0 1.4rem;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.2rem, 2.3vw, 1.5rem);
+}
+
+.invite .fp {
+  font-size: 1.7rem;
+  flex: none;
+  stroke-width: 7;
+}
+
+.connect .ask {
+  max-width: 34ch;
+  margin: 0 0 1.2rem;
+  font-size: 1.15rem;
+}
+
+.sign {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 1rem;
+}
+
+.sign .fp {
+  font-size: 2.1rem;
+  flex: none;
+  opacity: .85;
+  stroke-width: 4.5;
+}
+
+.signature {
+  font-family: var(--hand);
+  font-size: clamp(2.6rem, 6vw, 4rem);
+  line-height: 1;
+  color: var(--choc);
+  margin: .3rem 0 0 .2rem;
+  transform: rotate(-4deg);
+  display: inline-block;
+}
+
+.sigline {
+  display: block;
+  width: 170px;
+  height: 22px;
+  color: var(--olive);
+  margin-top: -6px;
+}
+
+.contacts {
+  list-style: none;
+  margin: clamp(0px, 5vw, 70px) 0 0;
+  padding: 0;
+}
+
+.contacts li {
+  border-top: 1px solid var(--line);
+}
+
+.contacts li:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+/* Each contact row: flex puts the text on the left and the arrow on the right.
+   On hover the row slides to the right (padding-left). */
+.contacts a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  text-decoration: none;
+  padding: 20px 0;
+  transition: padding .3s, color .3s;
+}
+
+.contacts small {
+  display: block;
+  font-size: .76rem;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--label);
+}
+
+.contacts b {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(1.1rem, 2.2vw, 1.45rem);
+  overflow-wrap: anywhere;
+}
+
+.contacts a.gmail {
+  display: block;
+  padding: 0 0 16px;
+  font-size: .88rem;
+  font-weight: 500;
+  color: var(--label);
+}
+
+.contacts a.gmail:hover,
+.contacts a.gmail:focus-visible {
+  padding-left: 0;
+  text-decoration: underline;
+}
+
+.contacts .ar {
+  font-size: 1.4rem;
+  color: var(--olive);
+  transition: transform .3s;
+  flex: none;
+}
+
+.contacts a:hover,
+.contacts a:focus-visible {
+  padding-left: 12px;
+  color: var(--label);
+}
+
+.contacts a:hover .ar,
+.contacts a:focus-visible .ar {
+  transform: translate(4px, -4px);
+}
+
+@media (max-width: 800px) {
+  .connect .split {
+    grid-template-columns: 1fr;
+  }
+  .contacts {
+    margin-top: 0;
+  }
+}
+
+/* ============ 10. CONTACT FORM ============ */
+
+/* The form card. overflow: hidden keeps the gold top line inside the rounded corners. */
+.connect .cform {
+  margin-top: clamp(40px, 6vw, 72px);
+  padding: clamp(24px, 4vw, 48px);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color .35s;
+}
+
+/* The thin gold line along the top of the card. */
+.cform::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #8a6414, #e3c35a, #8a6414);
+}
+
+.cform:hover,
+.cform:focus-within {
+  border-color: var(--taupe);
+}
+
+.cf-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: clamp(22px, 3vw, 34px);
+}
+
+.cf-head .fp {
+  font-size: 2.6rem;
+  flex: none;
+  stroke-width: 5;
+}
+
+.cf-head h3 {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+}
+
+.cf-head p {
+  margin: .35rem 0 0;
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--mocha);
+}
+
+/* Fields in 2 columns. A field with the class .wide spans the whole row. */
+.cf-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 24px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.field.wide {
+  grid-column: 1/-1;
+}
+
+.field label {
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--label);
+  transition: color .25s;
+}
+
+.field label em {
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: .04em;
+  text-transform: none;
+  opacity: .8;
+}
+
+.field:focus-within label {
+  color: #9a7418;
+}
+
+/* Shared look for all form controls. font: inherit makes them use the page
+   font (browsers use their own font by default). */
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 13px 16px;
+  transition: border-color .25s, box-shadow .25s, background .25s, transform .25s;
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 140px;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: var(--soft);
+  opacity: .55;
+}
+
+.field input:hover,
+.field select:hover,
+.field textarea:hover {
+  border-color: var(--mocha);
+  background: var(--alt);
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: #b8891b;
+  background: var(--bg);
+  box-shadow: 0 0 0 4px rgba(184, 137, 27, .18);
+}
+
+/* :user-invalid = red border only AFTER the visitor typed something wrong
+   (not as soon as the page loads). */
+.field input:user-invalid,
+.field select:user-invalid,
+.field textarea:user-invalid {
+  border-color: #b4532a;
+  box-shadow: 0 0 0 4px rgba(180, 83, 42, .14);
+}
+
+.sel {
+  position: relative;
+}
+
+/* appearance: none removes the browser's default arrow so we can draw our own. */
+.sel select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 44px;
+  cursor: pointer;
+}
+
+.sel select:invalid {
+  color: var(--soft);
+}
+
+.sel select option {
+  color: #49372D;
+  background: #F6F1E8;
+}
+
+/* Our own arrow: a small square with only 2 borders, rotated 45 degrees.
+   It flips over when the select is focused. */
+.sel::after {
+  content: "";
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-right: 1.5px solid var(--mocha);
+  border-bottom: 1.5px solid var(--mocha);
+  transform: translateY(-70%) rotate(45deg);
+  pointer-events: none;
+  transition: transform .3s;
+}
+
+.sel:focus-within::after {
+  transform: translateY(-30%) rotate(225deg);
+}
+
+.cf-foot {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px 24px;
+  margin-top: clamp(22px, 3vw, 32px);
+}
+
+/* The button. It is a real <button>, so keyboard users can reach it with Tab. */
+.send {
+  display: inline-flex;
+  align-items: center;
+  gap: .7em;
+  font: inherit;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  color: var(--btn-ink);
+  background: var(--btn);
+  border: 0;
+  border-radius: 999px;
+  padding: 14px 30px;
+  position: relative;
+  overflow: hidden;
+  transition: transform .3s cubic-bezier(.2, .7, .2, 1), box-shadow .3s, color .3s;
+}
+
+/* A gold layer on top of the dark button. Gradients cannot be animated,
+   so instead we fade this layer in with opacity. */
+.send::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, #8a6414, #e3c35a 50%, #8a6414);
+  opacity: 0;
+  transition: opacity .35s;
+}
+
+.send span {
+  position: relative;
+}
+
+.send .ar {
+  display: inline-block;
+  transition: transform .3s;
+}
+
+.send:hover,
+.send:focus-visible {
+  color: #2D241F;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -12px rgba(138, 100, 20, .75);
+}
+
+.send:hover::before,
+.send:focus-visible::before {
+  opacity: 1;
+}
+
+.send:hover .ar,
+.send:focus-visible .ar {
+  transform: translate(3px, -3px);
+}
+
+.send:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 700px) {
+  .cf-grid {
+    grid-template-columns: 1fr;
+  }
+  .cf-head {
+    align-items: flex-start;
+  }
+}
+
+/* ============ 11. FOOTER ============ */
+
+footer {
+  text-align: center;
+  padding: 36px 20px calc(40px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--line);
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--soft);
+}
+
+footer .fp {
+  display: block;
+  margin: 0 auto .5rem;
+  font-size: 1.4rem;
+}
+
+footer .copy {
+  margin: 1.1rem 0 0;
+  font-family: var(--sans);
+  font-style: normal;
+  font-size: .82rem;
+  line-height: 1.7;
+  letter-spacing: .04em;
+}
+
+/* ============ 12. ACCESSIBILITY ============ */
+
+/* ACCESSIBILITY: for visitors who asked their device to reduce motion,
+   turn off every animation and transition. */
+@media (prefers-reduced-motion: reduce) {
+  .m {
+    stroke-dashoffset: 0 !important;
+  }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
+/* Normalize every visible J/j glyph throughout the page. */
+.j-glyph-fix {
+  font-family: var(--sans), Arial, sans-serif !important;
+  font-style: normal !important;
+  font-variant: normal !important;
+  font-synthesis: none;
+}
+
+
+/* Fixed back-to-top control: a simple vector arrow that keeps its colour on phones. */
+.back-to-top {
+  position: fixed;
+  right: 22px;
+  bottom: max(22px, env(safe-area-inset-bottom));
+  z-index: 70;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid var(--sand);
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--mocha);
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 4px 14px rgba(73, 55, 45, .12);
+}
+
+.back-to-top svg {
+  width: 21px;
+  height: 21px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.back-to-top:hover,
+.back-to-top:focus-visible {
+  background: var(--alt);
+  color: var(--olive);
+}
+
+/* Show a small label on hover/focus so visitors know the arrow returns to the top. */
+.back-to-top::after {
+  content: "Back to top";
+  position: absolute;
+  right: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 7px 11px;
+  border: 1px solid var(--sand);
+  border-radius: 7px;
+  background: var(--bg);
+  color: var(--mocha);
+  font-family: var(--sans), Arial, sans-serif;
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(73, 55, 45, .10);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.back-to-top:hover::after,
+.back-to-top:focus-visible::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+@media (max-width: 480px) {
+  .back-to-top {
+    right: 14px;
+    bottom: max(14px, env(safe-area-inset-bottom));
+    width: 42px;
+    height: 42px;
+  }
+}
